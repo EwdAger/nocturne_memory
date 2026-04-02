@@ -508,17 +508,19 @@ SSE Endpoint: `http://localhost:8000/sse`
    ```
 
 3. **编辑 `.env` 配置文件**
-   - **对于 Docker 部署**：你必须取消注释 `Docker Compose Configuration` 下的所有变量（`POSTGRES_*` 和 `NGINX_PORT`）。
+   - **对于 Docker 部署**：你必须填写 `Docker Compose Configuration` 下的镜像地址（`BACKEND_IMAGE` 和 `FRONTEND_IMAGE`）以及所有运行时变量（`POSTGRES_*` 和 `NGINX_PORT`）。
    - **如果你想启用密码保护**（推荐公网部署时使用）：取消注释并修改 `API_TOKEN` 变量。
    - **如果只在本地单机使用 Docker**：保持 `API_TOKEN` 注释即可，系统会以无密码模式运行。
    ```bash
    nano .env  # 或使用你喜欢的编辑器
    ```
 
-4. **构建并启动所有服务**
+4. **拉取并启动所有服务**
    ```bash
-   docker compose up -d --build
+   docker compose pull
+   docker compose up -d
    ```
+   - 如果 GHCR 包是私有的，先在部署机器执行 `docker login ghcr.io`，并使用带 `read:packages` 权限的令牌登录。
 
 5. **访问管理界面**
    打开 `http://localhost`（或 `http://localhost:<NGINX_PORT>`）

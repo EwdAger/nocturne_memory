@@ -15,8 +15,7 @@ services:
     restart: unless-stopped
 
   backend-api:
-    build:
-      context: ./backend
+    image: ${BACKEND_IMAGE:?Set BACKEND_IMAGE in your .env file}
     command: uvicorn main:app --host 0.0.0.0 --port 8000
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?ssl=disable
@@ -38,8 +37,7 @@ services:
     restart: unless-stopped
 
   backend-sse:
-    build:
-      context: ./backend
+    image: ${BACKEND_IMAGE:?Set BACKEND_IMAGE in your .env file}
     command: python run_sse.py
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?ssl=disable
@@ -58,8 +56,7 @@ services:
     restart: unless-stopped
 
   nginx:
-    build:
-      context: ./frontend
+    image: ${FRONTEND_IMAGE:?Set FRONTEND_IMAGE in your .env file}
     ports:
       - "${NGINX_PORT:-80}:80"
     depends_on:

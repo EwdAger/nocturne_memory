@@ -506,17 +506,19 @@ In addition to the local Python installation, you can deploy the full Nocturne M
    ```
 
 3. **Edit the `.env` configuration file**
-   - **For Docker deployment**: you MUST uncomment all variables under `Docker Compose Configuration` (`POSTGRES_*` and `NGINX_PORT`).
+   - **For Docker deployment**: you MUST fill in the published image references (`BACKEND_IMAGE` and `FRONTEND_IMAGE`) and all runtime variables under `Docker Compose Configuration` (`POSTGRES_*` and `NGINX_PORT`).
    - **To enable password protection** (recommended for public deployment): uncomment and change the `API_TOKEN` variable.
    - **For local single-user mode in Docker**: leave `API_TOKEN` commented out. The system will run without authentication.
    ```bash
    nano .env  # or your preferred editor
    ```
 
-4. **Build and start all services**
+4. **Pull and start all services**
    ```bash
-   docker compose up -d --build
+   docker compose pull
+   docker compose up -d
    ```
+   - If the GHCR package is private, run `docker login ghcr.io` on the deployment host first with a token that has `read:packages`.
 
 5. **Open the management dashboard**
    Visit `http://localhost` (or `http://localhost:<NGINX_PORT>`)
