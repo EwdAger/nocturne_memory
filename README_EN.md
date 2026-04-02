@@ -519,6 +519,7 @@ In addition to the local Python installation, you can deploy the full Nocturne M
    docker compose up -d
    ```
    - If the GHCR package is private, run `docker login ghcr.io` on the deployment host first with a token that has `read:packages`.
+   - The backend image is pinned to Debian Bullseye to remain compatible with older Docker runtimes, such as Docker 18.09 with the older default seccomp profile that blocks newer glibc `clone3()` behavior.
 
 5. **Open the management dashboard**
    Visit `http://localhost` (or `http://localhost:<NGINX_PORT>`)

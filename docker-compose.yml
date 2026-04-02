@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
       interval: 5s
@@ -27,7 +27,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - snapshots_data:/app/snapshots
+      - ./data/snapshots:/app/snapshots
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 10s
@@ -52,7 +52,7 @@ services:
       backend-api:
         condition: service_healthy
     volumes:
-      - snapshots_data:/app/snapshots
+      - ./data/snapshots:/app/snapshots
     restart: unless-stopped
 
   nginx:
@@ -65,7 +65,3 @@ services:
       backend-sse:
         condition: service_started
     restart: unless-stopped
-
-volumes:
-  postgres_data:
-  snapshots_data:

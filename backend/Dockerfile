@@ -1,4 +1,6 @@
-FROM python:3.12-slim
+# Pin to Bullseye so the runtime stays compatible with older Docker/libseccomp
+# environments that cannot handle newer glibc clone3() behavior.
+FROM python:3.12-slim-bullseye
 
 # 安装系统依赖（libpq-dev 供 asyncpg/psycopg2 编译，build-essential 供 C 扩展和标准库头文件，postgresql-client 供 pg_dump 备份）
 RUN apt-get update \

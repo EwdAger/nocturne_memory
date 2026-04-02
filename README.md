@@ -521,6 +521,7 @@ SSE Endpoint: `http://localhost:8000/sse`
    docker compose up -d
    ```
    - 如果 GHCR 包是私有的，先在部署机器执行 `docker login ghcr.io`，并使用带 `read:packages` 权限的令牌登录。
+   - backend 镜像固定基于 Debian Bullseye 构建，用于兼容较老的 Docker 运行时（例如 Docker 18.09 默认 seccomp 对较新 glibc `clone3()` 的限制）。
 
 5. **访问管理界面**
    打开 `http://localhost`（或 `http://localhost:<NGINX_PORT>`）

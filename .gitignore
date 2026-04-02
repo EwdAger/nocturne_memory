@@ -16,6 +16,7 @@ snapshots/
 assets/
 frontend/dist/
 backups/
+data/
 
 # Sisyphus tooling artifacts
 .sisyphus/
