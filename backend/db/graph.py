@@ -983,6 +983,7 @@ class GraphService:
         async with self.session() as session:
             if not parent_path:
                 parent_uuid = ROOT_NODE_UUID
+                await self._ensure_node(session, ROOT_NODE_UUID)
             else:
                 parent = await self._resolve_path(session, parent_path, domain, namespace=namespace)
                 if not parent:
@@ -1234,6 +1235,7 @@ class GraphService:
                 _, _, parent_uuid = parent
             else:
                 parent_uuid = ROOT_NODE_UUID
+                await self._ensure_node(session, ROOT_NODE_UUID)
 
             existing = await session.execute(
                 select(Path).where(

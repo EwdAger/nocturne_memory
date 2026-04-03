@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import select
 
 
 async def test_create_and_update_memory_creates_version_chain(graph_service):
@@ -117,3 +118,14 @@ async def test_permanently_delete_memory_repairs_migration_chain(graph_service):
 
     assert first["migrated_to"] == latest["memory_id"]
     assert latest["deprecated"] is False
+
+
+async def test_init_db_ensures_root_node_exists():
+    from db import get_db_manager
+    from db.models import Node, ROOT_NODE_UUID
+
+    db = get_db_manager()
+    async with db.session() as session:
+        root = await session.execute(select(Node).where(Node.uuid == ROOT_NODE_UUID))
+
+    assert root.scalar_one_or_none() is not None

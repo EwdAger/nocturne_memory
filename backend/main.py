@@ -21,6 +21,7 @@ async def lifespan(app: FastAPI):
         print("Database initialized.")
     except Exception as e:
         print(f"Failed to initialize database: {e}")
+        raise
 
     yield
 

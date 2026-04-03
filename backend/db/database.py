@@ -14,9 +14,10 @@ from typing import Optional
 from urllib.parse import urlparse, parse_qs
 
 from sqlalchemy import event
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-from .models import Base
+from .models import Base, Node, ROOT_NODE_UUID
 
 
 class DatabaseManager:
@@ -124,6 +125,7 @@ class DatabaseManager:
                     await conn.run_sync(Base.metadata.create_all)
 
             await run_migrations(self.engine)
+            await self._ensure_root_node()
         except Exception as e:
             db_url = self.database_url
             if "@" in db_url and ":" in db_url:
@@ -146,3 +148,19 @@ class DatabaseManager:
     async def close(self):
         """Close the database connection."""
         await self.engine.dispose()
+
+    async def _ensure_root_node(self):
+        """Guarantee the sentinel root node exists for top-level edges."""
+        async with self.async_session() as session:
+            try:
+                result = await session.execute(
+                    select(Node).where(Node.uuid == ROOT_NODE_UUID)
+                )
+                if result.scalar_one_or_none() is None:
+                    session.add(Node(uuid=ROOT_NODE_UUID))
+                    await session.commit()
+                else:
+                    await session.rollback()
+            except Exception:
+                await session.rollback()
+                raise
